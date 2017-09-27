@@ -1,6 +1,7 @@
-import os
+import os, sys
 import time
 from pynput.mouse import Listener
+import subprocess
 
 class Mouse_listener():
     
@@ -27,18 +28,28 @@ class Mouse_listener():
                 (x, y)))
         return False
 
+
 def openfolder(path):
     os.startfile(path)
-    
+
 def main():
     print "Knock center"
-    #openfolder("D:")
+
+    openfolder("D:workspace")
+    '''
     evt = Mouse_listener()
     with Listener(
             on_move = evt.on_move,
             on_click = evt.on_click,
             on_scroll = evt.on_scroll) as listener:
         listener.join()
+    '''
+    time.sleep(1)
+    path = os.getcwd()
+    path = path + "/tool/nircmd.exe"
+    runexe = path.replace("\\", "/")
+    os.system(runexe + ' win close title "workspace"')
+
     
 if __name__ == "__main__":
     main()
