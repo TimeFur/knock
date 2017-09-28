@@ -49,7 +49,6 @@ def main():
     path = path + "/tool/nircmd.exe"
     runexe = path.replace("\\", "/")
     os.system(runexe + ' win close title "workspace"')
-
     
 if __name__ == "__main__":
     main()
