@@ -2,6 +2,7 @@ import os, sys
 import time
 from pynput.mouse import Listener
 import subprocess
+import win32gui
 
 class Mouse_listener():
     
@@ -32,10 +33,37 @@ class Mouse_listener():
 def openfolder(path):
     os.startfile(path)
 
+open_list = []
+def winEnumHandler(hwnd, ctx):
+    if win32gui.IsWindowVisible(hwnd):
+        #print hex(hwnd), win32gui.GetWindowText( hwnd )
+        open_list.append(win32gui.GetWindowText(hwnd))
+
+class Win_watch():
+    def __init__(self):
+        self.open_list = []
+        win32gui.EnumWindows(self.winEnumHandler, None)
+        
+    def winEnumHandler(self, hwnd, ctx):
+        if win32gui.IsWindowVisible(hwnd):
+            #print hex(hwnd), win32gui.GetWindowText( hwnd )
+            self.open_list.append(win32gui.GetWindowText(hwnd))
+
 def main():
     print "Knock center"
-
+    win32gui.EnumWindows(winEnumHandler, None)
+    
+    w = Win_watch()
+    
+    for i in open_list:
+        print i
+        
     openfolder("D:workspace")
+    
+    time.sleep(0.3)
+    win32gui.EnumWindows(winEnumHandler, None)
+    for i in open_list:
+        print i
     '''
     evt = Mouse_listener()
     with Listener(
@@ -44,7 +72,8 @@ def main():
             on_scroll = evt.on_scroll) as listener:
         listener.join()
     '''
-    time.sleep(1)
+    
+    #time.sleep(1)
     path = os.getcwd()
     path = path + "/tool/nircmd.exe"
     runexe = path.replace("\\", "/")
